@@ -17,7 +17,7 @@ services:
   model:
     image: my-solution:v1
     build:
-      dockerfile: docker/aic_model/Dockerfile
+      dockerfile: docker/nic_policy_node/Dockerfile
       context: ..
     gpus: all
     networks:

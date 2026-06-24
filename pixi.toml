@@ -23,6 +23,7 @@ ros-kilted-aic-model-interfaces = { path = "aic_interfaces/aic_model_interfaces"
 ros-kilted-aic-task-interfaces = { path = "aic_interfaces/aic_task_interfaces" }
 ros-kilted-aic-teleoperation = { path = "aic_utils/aic_teleoperation" }
 ros-kilted-aic-training-interfaces = { path = "aic_utils/aic_training_interfaces" }
+ros-kilted-nic-policy-node = { path = "nic_policy_node" }
 ros-kilted-control-msgs = "*"                                                          # lerobot_robot_ros
 ros-kilted-geometry-msgs = "*"                                                         # lerobot_robot_ros
 ros-kilted-lerobot-robot-aic = { path = "aic_utils/lerobot_robot_aic" }
@@ -35,6 +36,7 @@ ros-kilted-std-msgs = "*"                                                       
 ros-kilted-std-srvs = "*"
 ros-kilted-tf2-ros-py = "*"
 setuptools = ">=71.0.0,<81.0.0"                                                        # required by lerobot==0.4.3
+scipy = ">=1.17.1,<2"
 
 [pypi-dependencies]
 huggingface-hub = { version = "~=1.7" }

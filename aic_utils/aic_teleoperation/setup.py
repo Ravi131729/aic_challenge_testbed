@@ -21,6 +21,15 @@ setup(
         "console_scripts": [
             "cartesian_keyboard_teleop = aic_teleoperation.cartesian_keyboard_teleop:main",
             "joint_keyboard_teleop = aic_teleoperation.joint_keyboard_teleop:main",
+            "cam_test = aic_teleoperation.cam_test:main",
+            "mag_test = aic_teleoperation.mag_test:main",
+            "reference_pose_initializer = aic_teleoperation.reference_pose_initializer:main",
+            "board_pose_estimator = aic_teleoperation.board_pose_estimator:main",
+            "move2task = aic_teleoperation.move2task:main",
+            "cheat_teleop = aic_teleoperation.cheatcode_tf_teleop:main",
+            "insert_task = aic_teleoperation.insert:main",
+            "port_finder = aic_teleoperation.port_finder:main",
+            "sc_port_finder = aic_teleoperation.sc_port_finder:main",
         ],
     },
 )
