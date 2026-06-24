@@ -1,3 +1,5 @@
+This is derived from AI for Industry Challenge github [https://github.com/intrinsic-dev/aic]
+
 # AI for Industry Challenge Toolkit
 
 [![build](https://github.com/intrinsic-dev/aic/actions/workflows/build.yml/badge.svg)](https://github.com/intrinsic-dev/aic/actions/workflows/build.yml)
