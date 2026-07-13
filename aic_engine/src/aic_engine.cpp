@@ -1872,11 +1872,12 @@ bool Engine::spawn_entity(Trial& trial, std::string entity_name,
       }
     }
 
-    // Add rail parameters (type-specific rails: lc_mount_rail_0/1,
-    // sfp_mount_rail_0/1, sc_mount_rail_0/1)
+    // Add rail parameters (LC mounts 0/1; SFP and SC mounts 0-4).
     std::vector<std::string> rail_keys = {
         "lc_mount_rail_0", "sfp_mount_rail_0", "sc_mount_rail_0",
-        "lc_mount_rail_1", "sfp_mount_rail_1", "sc_mount_rail_1"};
+        "lc_mount_rail_1", "sfp_mount_rail_1", "sc_mount_rail_1",
+        "sfp_mount_rail_2", "sfp_mount_rail_3", "sfp_mount_rail_4",
+        "sc_mount_rail_2", "sc_mount_rail_3", "sc_mount_rail_4"};
 
     for (const auto& rail_key : rail_keys) {
       if (config[rail_key] && config[rail_key]["entity_present"] &&

@@ -139,6 +139,8 @@ void CablePlugin::Configure(const gz::sim::Entity& _entity,
           .first;
 
   this->spawnCableGuard = _sdf->Get<bool>("spawn_cable_guard", false).first;
+  this->pinCableConnection1 =
+      _sdf->Get<bool>("pin_cable_connection_1", false).first;
 
   double delay = _sdf->Get<double>("create_connection_delay_s", 0.0).first;
   this->createJointDelay = delay;
@@ -218,11 +220,19 @@ void CablePlugin::PreUpdate(const gz::sim::UpdateInfo& _info,
     // Detach joints that are holding cable connections in place
     if (this->detachableJointStatic0Entity != kNullEntity ||
         this->detachableJointStatic1Entity != kNullEntity) {
-      _ecm.RequestRemoveEntity(this->detachableJointStatic0Entity);
-      _ecm.RequestRemoveEntity(this->detachableJointStatic1Entity);
-      this->detachableJointStatic0Entity = kNullEntity;
-      this->detachableJointStatic1Entity = kNullEntity;
-      return;
+      bool removedJoint = false;
+      if (this->detachableJointStatic0Entity != kNullEntity) {
+        _ecm.RequestRemoveEntity(this->detachableJointStatic0Entity);
+        this->detachableJointStatic0Entity = kNullEntity;
+        removedJoint = true;
+      }
+      if (!this->pinCableConnection1 &&
+          this->detachableJointStatic1Entity != kNullEntity) {
+        _ecm.RequestRemoveEntity(this->detachableJointStatic1Entity);
+        this->detachableJointStatic1Entity = kNullEntity;
+        removedJoint = true;
+      }
+      if (removedJoint) return;
     }
 
     // Attach cable connection 0 to end effector
@@ -296,10 +306,14 @@ void CablePlugin::PreUpdate(const gz::sim::UpdateInfo& _info,
     // Simulate this by making all cable connections static
     if (this->detachableJointStatic0Entity == kNullEntity ||
         this->detachableJointStatic1Entity == kNullEntity) {
-      this->detachableJointStatic0Entity = this->MakeStatic(
-          this->cableConnection0LinkEntity, true, this->creator.get(), _ecm);
-      this->detachableJointStatic1Entity = this->MakeStatic(
-          this->cableConnection1LinkEntity, true, this->creator.get(), _ecm);
+      if (this->detachableJointStatic0Entity == kNullEntity) {
+        this->detachableJointStatic0Entity = this->MakeStatic(
+            this->cableConnection0LinkEntity, true, this->creator.get(), _ecm);
+      }
+      if (this->detachableJointStatic1Entity == kNullEntity) {
+        this->detachableJointStatic1Entity = this->MakeStatic(
+            this->cableConnection1LinkEntity, true, this->creator.get(), _ecm);
+      }
       this->lockEndEffectorDelayStartTime =
           std::chrono::duration_cast<std::chrono::seconds>(_info.simTime)
               .count();

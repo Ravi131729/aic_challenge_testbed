@@ -37,7 +37,9 @@ def launch_setup(context, *args, **kwargs):
     cable_pitch = LaunchConfiguration("cable_pitch")
     cable_yaw = LaunchConfiguration("cable_yaw")
     attach_cable_to_gripper = LaunchConfiguration("attach_cable_to_gripper")
+    pin_cable_connection_1 = LaunchConfiguration("pin_cable_connection_1")
     cable_type = LaunchConfiguration("cable_type")
+    cable_name = LaunchConfiguration("cable_name")
 
     # Process cable description
     cable_description_content = Command(
@@ -51,6 +53,9 @@ def launch_setup(context, *args, **kwargs):
             " ",
             "cable_type:=",
             cable_type,
+            " ",
+            "pin_cable_connection_1:=",
+            pin_cable_connection_1,
         ]
     )
 
@@ -63,7 +68,7 @@ def launch_setup(context, *args, **kwargs):
             "-string",
             cable_description_content,
             "-name",
-            "cable_0",
+            cable_name,
             "-allow_renaming",
             "true",
             "-x",
@@ -87,6 +92,13 @@ def launch_setup(context, *args, **kwargs):
 def generate_launch_description():
     declared_arguments = []
 
+    declared_arguments.append(
+        DeclareLaunchArgument(
+            "cable_name",
+            default_value="cable_0",
+            description="Gazebo entity name for the cable.",
+        )
+    )
     declared_arguments.append(
         DeclareLaunchArgument(
             "cable_description_file",
@@ -143,6 +155,16 @@ def generate_launch_description():
             "attach_cable_to_gripper",
             default_value="false",
             description="Whether to attach cable to gripper",
+        )
+    )
+    declared_arguments.append(
+        DeclareLaunchArgument(
+            "pin_cable_connection_1",
+            default_value="false",
+            description=(
+                "Whether to keep cable connection 1 fixed at its spawn pose "
+                "after cable connection 0 attaches to the gripper"
+            ),
         )
     )
     declared_arguments.append(

@@ -218,6 +218,10 @@ namespace aic_gazebo
     /// This is an invisible collision that stops the cable body for moving
     /// through the gap between the gripper fingers
     private: bool spawnCableGuard = false;
+
+    /// \brief Keep cable connection 1 fixed at its spawn pose while connection
+    /// 0 is attached to the gripper.
+    private: bool pinCableConnection1 = false;
 };
 }
 #endif

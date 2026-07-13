@@ -90,7 +90,9 @@ def launch_setup(context, *args, **kwargs):
     cable_pitch = LaunchConfiguration("cable_pitch")
     cable_yaw = LaunchConfiguration("cable_yaw")
     attach_cable_to_gripper = LaunchConfiguration("attach_cable_to_gripper")
+    pin_cable_connection_1 = LaunchConfiguration("pin_cable_connection_1")
     cable_type = LaunchConfiguration("cable_type")
+    cable_name = LaunchConfiguration("cable_name")
     ground_truth = LaunchConfiguration("ground_truth")
     start_aic_engine = LaunchConfiguration("start_aic_engine")
     shutdown_on_aic_engine_exit = LaunchConfiguration("shutdown_on_aic_engine_exit")
@@ -312,6 +314,7 @@ def launch_setup(context, *args, **kwargs):
             )
         ),
         launch_arguments={
+            "cable_name": cable_name,
             "cable_description_file": cable_description_file,
             "cable_x": cable_x,
             "cable_y": cable_y,
@@ -320,10 +323,45 @@ def launch_setup(context, *args, **kwargs):
             "cable_pitch": cable_pitch,
             "cable_yaw": cable_yaw,
             "attach_cable_to_gripper": attach_cable_to_gripper,
+            "pin_cable_connection_1": pin_cable_connection_1,
             "cable_type": cable_type,
         }.items(),
         condition=IfCondition(spawn_cable),
     )
+
+    extra_cable_launches = []
+    for cable_index in range(1, 5):
+        extra_cable_launches.append(
+            IncludeLaunchDescription(
+                PythonLaunchDescriptionSource(
+                    PathJoinSubstitution(
+                        [
+                            FindPackageShare("aic_bringup"),
+                            "launch",
+                            "spawn_cable.launch.py",
+                        ]
+                    )
+                ),
+                launch_arguments={
+                    "cable_name": LaunchConfiguration(f"cable_{cable_index}_name"),
+                    "cable_description_file": cable_description_file,
+                    "cable_x": LaunchConfiguration(f"cable_{cable_index}_x"),
+                    "cable_y": LaunchConfiguration(f"cable_{cable_index}_y"),
+                    "cable_z": LaunchConfiguration(f"cable_{cable_index}_z"),
+                    "cable_roll": LaunchConfiguration(f"cable_{cable_index}_roll"),
+                    "cable_pitch": LaunchConfiguration(f"cable_{cable_index}_pitch"),
+                    "cable_yaw": LaunchConfiguration(f"cable_{cable_index}_yaw"),
+                    "attach_cable_to_gripper": LaunchConfiguration(
+                        f"attach_cable_{cable_index}_to_gripper"
+                    ),
+                    "pin_cable_connection_1": LaunchConfiguration(
+                        f"pin_cable_{cable_index}_connection_1"
+                    ),
+                    "cable_type": LaunchConfiguration(f"cable_{cable_index}_type"),
+                }.items(),
+                condition=IfCondition(LaunchConfiguration(f"spawn_cable_{cable_index}")),
+            )
+        )
 
     gz_ip_env = SetEnvironmentVariable(name="GZ_IP", value="127.0.0.1")
 
@@ -440,6 +478,7 @@ def launch_setup(context, *args, **kwargs):
         gz_spawn_entity,
         spawn_task_board_launch,
         spawn_cable_launch,
+        *extra_cable_launches,
         ground_truth_tf_relay,
         ground_truth_static_tf_publisher,
         aic_engine,
@@ -671,9 +710,26 @@ def generate_launch_description():
 
     declared_arguments.append(
         DeclareLaunchArgument(
+            "cable_name",
+            default_value="cable_0",
+            description="Gazebo entity name for the primary cable",
+        )
+    )
+    declared_arguments.append(
+        DeclareLaunchArgument(
             "attach_cable_to_gripper",
             default_value="false",
             description="Whether to attach cable to gripper (applicable only if spawn_cable is true)",
+        )
+    )
+    declared_arguments.append(
+        DeclareLaunchArgument(
+            "pin_cable_connection_1",
+            default_value="false",
+            description=(
+                "Whether to keep cable connection 1 fixed at its spawn pose "
+                "after cable connection 0 attaches to the gripper"
+            ),
         )
     )
     declared_arguments.append(
@@ -742,6 +798,90 @@ def generate_launch_description():
             description="Cable spawn yaw orientation (radians)",
         )
     )
+    for cable_index in range(1, 5):
+        declared_arguments.append(
+            DeclareLaunchArgument(
+                f"spawn_cable_{cable_index}",
+                default_value="false",
+                description=f"Whether to spawn cable_{cable_index}",
+            )
+        )
+        declared_arguments.append(
+            DeclareLaunchArgument(
+                f"cable_{cable_index}_name",
+                default_value=f"cable_{cable_index}",
+                description=f"Gazebo entity name for cable_{cable_index}",
+            )
+        )
+        declared_arguments.append(
+            DeclareLaunchArgument(
+                f"attach_cable_{cable_index}_to_gripper",
+                default_value="false",
+                description=f"Whether to attach cable_{cable_index} to gripper",
+            )
+        )
+        declared_arguments.append(
+            DeclareLaunchArgument(
+                f"pin_cable_{cable_index}_connection_1",
+                default_value="false",
+                description=(
+                    f"Whether to keep cable_{cable_index} connection 1 fixed "
+                    "at its spawn pose after connection 0 attaches to the gripper"
+                ),
+            )
+        )
+        declared_arguments.append(
+            DeclareLaunchArgument(
+                f"cable_{cable_index}_type",
+                default_value="sfp_sc_cable",
+                description=(
+                    f"Type of cable model to spawn for cable_{cable_index}."
+                ),
+                choices=["sfp_sc_cable", "sfp_sc_cable_reversed"],
+            )
+        )
+        declared_arguments.append(
+            DeclareLaunchArgument(
+                f"cable_{cable_index}_x",
+                default_value="0.172",
+                description=f"Spawn X position for cable_{cable_index}",
+            )
+        )
+        declared_arguments.append(
+            DeclareLaunchArgument(
+                f"cable_{cable_index}_y",
+                default_value="0.024",
+                description=f"Spawn Y position for cable_{cable_index}",
+            )
+        )
+        declared_arguments.append(
+            DeclareLaunchArgument(
+                f"cable_{cable_index}_z",
+                default_value="1.518",
+                description=f"Spawn Z position for cable_{cable_index}",
+            )
+        )
+        declared_arguments.append(
+            DeclareLaunchArgument(
+                f"cable_{cable_index}_roll",
+                default_value="0.4432",
+                description=f"Spawn roll orientation for cable_{cable_index}",
+            )
+        )
+        declared_arguments.append(
+            DeclareLaunchArgument(
+                f"cable_{cable_index}_pitch",
+                default_value="-0.48",
+                description=f"Spawn pitch orientation for cable_{cable_index}",
+            )
+        )
+        declared_arguments.append(
+            DeclareLaunchArgument(
+                f"cable_{cable_index}_yaw",
+                default_value="1.3303",
+                description=f"Spawn yaw orientation for cable_{cable_index}",
+            )
+        )
     declared_arguments.append(
         DeclareLaunchArgument(
             "ground_truth",

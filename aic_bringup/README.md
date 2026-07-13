@@ -209,21 +209,15 @@ The task board has 6 mount rails for LC, SFP, and SC connector mounts. Each rail
 
 **SC Port Rails:**
 
-Two SC port rails for attaching SC port modules.
+Two SC port rails support five SC port modules:
 
-*SC Port 0:*
-- `sc_port_0_present` (default: `"false"`) - Whether SC port is present on rail 0
-- `sc_port_0_translation` (default: `"0.0"`) - Translation along rail (meters)
-- `sc_port_0_roll` (default: `"0.0"`) - Roll orientation (radians)
-- `sc_port_0_pitch` (default: `"0.0"`) - Pitch orientation (radians)
-- `sc_port_0_yaw` (default: `"0.0"`) - Yaw orientation (radians)
+- Rail 0: `sc_port_0`, `sc_port_1`, and `sc_port_2`
+- Rail 1: `sc_port_3` and `sc_port_4`
 
-*SC Port 1:*
-- `sc_port_1_present` (default: `"false"`) - Whether SC port is present on rail 1
-- `sc_port_1_translation` (default: `"0.0"`) - Translation along rail (meters)
-- `sc_port_1_roll` (default: `"0.0"`) - Roll orientation (radians)
-- `sc_port_1_pitch` (default: `"0.0"`) - Pitch orientation (radians)
-- `sc_port_1_yaw` (default: `"0.0"`) - Yaw orientation (radians)
+Each port exposes `sc_port_<N>_present`, `sc_port_<N>_translation`,
+`sc_port_<N>_roll`, `sc_port_<N>_pitch`, and `sc_port_<N>_yaw`. The default is
+`"false"` for `present` and `"0.0"` for pose values. Translation must be within
+`[-0.06, 0.055]` meters.
 
 **NIC Card Mount Rails:**
 

@@ -3,6 +3,7 @@
 
   <xacro:arg name="attach_cable_to_gripper" default="false"/>
   <xacro:arg name="cable_type" default="sfp_sc_cable"/>
+  <xacro:arg name="pin_cable_connection_1" default="false"/>
 
   <xacro:property name="cable_type" value="$(arg cable_type)" />
   <xacro:property name="end_effector_model" value="ur5e" />
@@ -32,6 +33,7 @@
         <end_effector_model>${end_effector_model}</end_effector_model>
         <end_effector_link>${end_effector_link}</end_effector_link>
         <create_connection_delay_s>0</create_connection_delay_s>
+        <pin_cable_connection_1>$(arg pin_cable_connection_1)</pin_cable_connection_1>
       </plugin>
       </xacro:if>
 

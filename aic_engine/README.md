@@ -35,7 +35,7 @@ The engine dynamically generates task boards based on YAML configuration files, 
 - Configurable pose (position and orientation)
 - NIC card mounts on 5 rails (nic_rail_0 through nic_rail_4)
 - SC ports on 2 rails (sc_rail_0 and sc_rail_1)
-- LC, SFP, and SC mounts on 6 mount rails (lc_mount_rail_0/1, sfp_mount_rail_0/1, sc_mount_rail_0/1)
+- LC mounts on 2 rails (`lc_mount_rail_0/1`) and SFP/SC mounts on 5 rails each (`sfp_mount_rail_0` through `_4` and `sc_mount_rail_0` through `_4`)
 - Adjustable translation and rotation for each component
 - Ground truth pose publishing (optional)
 

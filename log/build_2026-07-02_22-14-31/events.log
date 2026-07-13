@@ -1,0 +1,27 @@
+[0.000000] (-) TimerEvent: {}
+[0.000171] (-) JobUnselected: {'identifier': 'aic_adapter'}
+[0.000200] (-) JobUnselected: {'identifier': 'aic_assets'}
+[0.000217] (-) JobUnselected: {'identifier': 'aic_control_interfaces'}
+[0.000231] (-) JobUnselected: {'identifier': 'aic_controller'}
+[0.000244] (-) JobUnselected: {'identifier': 'aic_engine'}
+[0.000256] (-) JobUnselected: {'identifier': 'aic_engine_interfaces'}
+[0.000267] (-) JobUnselected: {'identifier': 'aic_example_policies'}
+[0.000279] (-) JobUnselected: {'identifier': 'aic_model'}
+[0.000288] (-) JobUnselected: {'identifier': 'aic_model_interfaces'}
+[0.000297] (-) JobUnselected: {'identifier': 'aic_mujoco'}
+[0.000306] (-) JobUnselected: {'identifier': 'aic_scoring'}
+[0.000315] (-) JobUnselected: {'identifier': 'aic_task'}
+[0.000324] (-) JobUnselected: {'identifier': 'aic_task_interfaces'}
+[0.000333] (-) JobUnselected: {'identifier': 'aic_teleoperation'}
+[0.000345] (-) JobUnselected: {'identifier': 'aic_training_interfaces'}
+[0.000357] (-) JobUnselected: {'identifier': 'aic_training_utils'}
+[0.000366] (-) JobUnselected: {'identifier': 'lerobot_robot_aic'}
+[0.000375] (-) JobUnselected: {'identifier': 'nic_policy_node'}
+[0.000387] (aic_gazebo) JobQueued: {'identifier': 'aic_gazebo', 'dependencies': OrderedDict({'aic_engine_interfaces': '/home/ravi/ws_aic/src/aic/install'})}
+[0.000409] (aic_description) JobQueued: {'identifier': 'aic_description', 'dependencies': OrderedDict({'aic_assets': '/home/ravi/ws_aic/src/aic/install', 'aic_engine_interfaces': '/home/ravi/ws_aic/src/aic/install', 'aic_gazebo': '/home/ravi/ws_aic/src/aic/install'})}
+[0.000426] (aic_bringup) JobQueued: {'identifier': 'aic_bringup', 'dependencies': OrderedDict({'aic_assets': '/home/ravi/ws_aic/src/aic/install', 'aic_control_interfaces': '/home/ravi/ws_aic/src/aic/install', 'aic_engine_interfaces': '/home/ravi/ws_aic/src/aic/install', 'aic_task_interfaces': '/home/ravi/ws_aic/src/aic/install', 'aic_controller': '/home/ravi/ws_aic/src/aic/install', 'aic_gazebo': '/home/ravi/ws_aic/src/aic/install', 'aic_scoring': '/home/ravi/ws_aic/src/aic/install', 'aic_description': '/home/ravi/ws_aic/src/aic/install', 'aic_engine': '/home/ravi/ws_aic/src/aic/install'})}
+[0.000447] (aic_gazebo) JobStarted: {'identifier': 'aic_gazebo'}
+[0.011787] (aic_gazebo) JobEnded: {'identifier': 'aic_gazebo', 'rc': 1}
+[0.022045] (aic_description) JobSkipped: {'identifier': 'aic_description'}
+[0.022072] (aic_bringup) JobSkipped: {'identifier': 'aic_bringup'}
+[0.022087] (-) EventReactorShutdown: {}

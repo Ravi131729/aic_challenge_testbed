@@ -74,18 +74,23 @@ def launch_setup(context, *args, **kwargs):
     sc_mount_rail_1_pitch = LaunchConfiguration("sc_mount_rail_1_pitch")
     sc_mount_rail_1_yaw = LaunchConfiguration("sc_mount_rail_1_yaw")
 
-    # SC Port parameters
-    sc_port_0_present = LaunchConfiguration("sc_port_0_present")
-    sc_port_0_translation = LaunchConfiguration("sc_port_0_translation")
-    sc_port_0_roll = LaunchConfiguration("sc_port_0_roll")
-    sc_port_0_pitch = LaunchConfiguration("sc_port_0_pitch")
-    sc_port_0_yaw = LaunchConfiguration("sc_port_0_yaw")
+    additional_mount_arguments = {
+        (mount_type, index): {
+            field: LaunchConfiguration(f"{mount_type}_mount_rail_{index}_{field}")
+            for field in ("present", "translation", "roll", "pitch", "yaw")
+        }
+        for mount_type in ("sfp", "sc")
+        for index in range(2, 5)
+    }
 
-    sc_port_1_present = LaunchConfiguration("sc_port_1_present")
-    sc_port_1_translation = LaunchConfiguration("sc_port_1_translation")
-    sc_port_1_roll = LaunchConfiguration("sc_port_1_roll")
-    sc_port_1_pitch = LaunchConfiguration("sc_port_1_pitch")
-    sc_port_1_yaw = LaunchConfiguration("sc_port_1_yaw")
+    # SC Port parameters
+    sc_port_arguments = {
+        index: {
+            field: LaunchConfiguration(f"sc_port_{index}_{field}")
+            for field in ("present", "translation", "roll", "pitch", "yaw")
+        }
+        for index in range(5)
+    }
 
     # NIC Card Mount parameters
     nic_card_mount_0_present = LaunchConfiguration("nic_card_mount_0_present")
@@ -233,36 +238,22 @@ def launch_setup(context, *args, **kwargs):
             "sc_mount_rail_1_yaw:=",
             sc_mount_rail_1_yaw,
             " ",
-            "sc_port_0_present:=",
-            sc_port_0_present,
-            " ",
-            "sc_port_0_translation:=",
-            sc_port_0_translation,
-            " ",
-            "sc_port_0_roll:=",
-            sc_port_0_roll,
-            " ",
-            "sc_port_0_pitch:=",
-            sc_port_0_pitch,
-            " ",
-            "sc_port_0_yaw:=",
-            sc_port_0_yaw,
-            " ",
-            "sc_port_1_present:=",
-            sc_port_1_present,
-            " ",
-            "sc_port_1_translation:=",
-            sc_port_1_translation,
-            " ",
-            "sc_port_1_roll:=",
-            sc_port_1_roll,
-            " ",
-            "sc_port_1_pitch:=",
-            sc_port_1_pitch,
-            " ",
-            "sc_port_1_yaw:=",
-            sc_port_1_yaw,
-            " ",
+            *[
+                item
+                for (mount_type, index), arguments in additional_mount_arguments.items()
+                for field, value in arguments.items()
+                for item in (
+                    f"{mount_type}_mount_rail_{index}_{field}:=",
+                    value,
+                    " ",
+                )
+            ],
+            *[
+                item
+                for index, arguments in sc_port_arguments.items()
+                for field, value in arguments.items()
+                for item in (f"sc_port_{index}_{field}:=", value, " ")
+            ],
             "nic_card_mount_0_present:=",
             nic_card_mount_0_present,
             " ",
@@ -647,79 +638,44 @@ def generate_launch_description():
         )
     )
 
-    # SC Port 0 arguments
-    declared_arguments.append(
-        DeclareLaunchArgument(
-            "sc_port_0_present",
-            default_value="false",
-            description="Whether SC Port 0 is present",
-        )
-    )
-    declared_arguments.append(
-        DeclareLaunchArgument(
-            "sc_port_0_translation",
-            default_value="0.0",
-            description="SC Port 0 translation along rail (meters)",
-        )
-    )
-    declared_arguments.append(
-        DeclareLaunchArgument(
-            "sc_port_0_roll",
-            default_value="0.0",
-            description="SC Port 0 roll orientation (radians)",
-        )
-    )
-    declared_arguments.append(
-        DeclareLaunchArgument(
-            "sc_port_0_pitch",
-            default_value="0.0",
-            description="SC Port 0 pitch orientation (radians)",
-        )
-    )
-    declared_arguments.append(
-        DeclareLaunchArgument(
-            "sc_port_0_yaw",
-            default_value="0.0",
-            description="SC Port 0 yaw orientation (radians)",
-        )
-    )
+    # Additional SFP/SC mounts: indices 2/3 use rail-0 side; 4 uses rail-1 side.
+    mount_field_descriptions = {
+        "present": "Whether {label} Mount {index} is present",
+        "translation": "{label} Mount {index} translation along rail (meters, valid range: -0.09625 to 0.09625)",
+        "roll": "{label} Mount {index} roll orientation (radians)",
+        "pitch": "{label} Mount {index} pitch orientation (radians)",
+        "yaw": "{label} Mount {index} yaw orientation (radians)",
+    }
+    for mount_type in ("sfp", "sc"):
+        for index in range(2, 5):
+            for field, description in mount_field_descriptions.items():
+                declared_arguments.append(
+                    DeclareLaunchArgument(
+                        f"{mount_type}_mount_rail_{index}_{field}",
+                        default_value="false" if field == "present" else "0.0",
+                        description=description.format(
+                            label=mount_type.upper(), index=index
+                        ),
+                    )
+                )
 
-    # SC Port 1 arguments
-    declared_arguments.append(
-        DeclareLaunchArgument(
-            "sc_port_1_present",
-            default_value="false",
-            description="Whether SC Port 1 is present",
-        )
-    )
-    declared_arguments.append(
-        DeclareLaunchArgument(
-            "sc_port_1_translation",
-            default_value="0.0",
-            description="SC Port 1 translation along rail (meters)",
-        )
-    )
-    declared_arguments.append(
-        DeclareLaunchArgument(
-            "sc_port_1_roll",
-            default_value="0.0",
-            description="SC Port 1 roll orientation (radians)",
-        )
-    )
-    declared_arguments.append(
-        DeclareLaunchArgument(
-            "sc_port_1_pitch",
-            default_value="0.0",
-            description="SC Port 1 pitch orientation (radians)",
-        )
-    )
-    declared_arguments.append(
-        DeclareLaunchArgument(
-            "sc_port_1_yaw",
-            default_value="0.0",
-            description="SC Port 1 yaw orientation (radians)",
-        )
-    )
+    # SC Port arguments
+    field_descriptions = {
+        "present": "Whether SC Port {index} is present",
+        "translation": "SC Port {index} translation along rail (meters, valid range: -0.06 to 0.055)",
+        "roll": "SC Port {index} roll orientation (radians)",
+        "pitch": "SC Port {index} pitch orientation (radians)",
+        "yaw": "SC Port {index} yaw orientation (radians)",
+    }
+    for index in range(5):
+        for field, description in field_descriptions.items():
+            declared_arguments.append(
+                DeclareLaunchArgument(
+                    f"sc_port_{index}_{field}",
+                    default_value="false" if field == "present" else "0.0",
+                    description=description.format(index=index),
+                )
+            )
 
     # NIC Card Mount 0 arguments
     declared_arguments.append(
