@@ -1,11 +1,11 @@
 #!/usr/bin/env bash
 
 # Random ranges
-X_MIN=0.15
+X_MIN=0.25
 X_MAX=0.25
 Y_MIN=-0.2
-Y_MAX=-0.3
-YAW_MIN=-2.0
+Y_MAX=-0.2
+YAW_MIN=3.14
 YAW_MAX=3.14
 
 nic_yaw_min=-0.17

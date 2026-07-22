@@ -30,6 +30,7 @@ setup(
             "insert_task = aic_teleoperation.insert:main",
             "port_finder = aic_teleoperation.port_finder:main",
             "sc_port_finder = aic_teleoperation.sc_port_finder:main",
+            "move_robot = aic_teleoperation.move_robot:main",
         ],
     },
 )
